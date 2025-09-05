@@ -1,0 +1,4 @@
+(executable
+ (public_name num_op_combs)
+ (name main)
+ (libraries num_op_combs))
