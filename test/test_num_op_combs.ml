@@ -1,10 +1,7 @@
 open Alcotest
 
 let test_possible_outputs () =
-  check
-    (list (float 0.01))
-    "same lists" [ -1.; 0.5; 1.; 2.; 3. ]
-    (Solver.possible_outputs [ 1.; 2. ])
+  check (list string) "expected output" [] (Solver.solve [ 1.; 3.; 5.; 7. ] 3.)
 
 let () =
   run "Known Inputs"

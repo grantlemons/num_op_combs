@@ -67,14 +67,11 @@ let split k u l =
     []
     [ four_way; fourth; third; second; first ]
 
-let ( =. ) a b = Float.abs (a -. b) <= 0.0001
-let other_input op v x = apply (inverse op) v x
-
 (* Requires len(nums) <= 4 *)
 let rec solve nums v : string list =
   if List.length nums > 4 then failwith "List length greater than 4";
   let inner op =
-    let other_input = other_input op v in
+    let other_input = apply (inverse op) v in
 
     let combine_known l1 r =
       list_format (solve l1 @@ other_input r) [ Float.to_string r ] op
@@ -87,6 +84,7 @@ let rec solve nums v : string list =
         [] (possible_outputs l2)
     in
 
+    let ( =. ) a b = Float.abs (a -. b) <= 0.0001 in
     match nums with
     | [] -> []
     | [ x ] when x =. v -> [ Float.to_string x ]
