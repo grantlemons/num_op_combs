@@ -13,8 +13,8 @@ let inverse = function
   | Sub -> Add
   | Mul -> Div
   | Div -> Mul
-  | RSub -> Add
-  | RDiv -> Mul
+  | RSub -> RSub
+  | RDiv -> RDiv
 
 let list_format l1 l2 op =
   let format a b =
@@ -33,14 +33,14 @@ let list_format l1 l2 op =
   List.map (fun x -> uncurry format x) @@ cartesian l1 l2
 
 (* RDiv and RSub are Div and Sub with swapped inputs *)
-let ops = [ Add; Sub; Mul; Div ]
+let ops = [ Add; Sub; Mul; Div; RSub; RDiv ]
 
 (* Returns all possible combinations of operators and a list of two numbers *)
 let possible_outputs =
   let module FloatSet = Set.Make (Float) in
   function
   | [ a; b ] ->
-      List.map (fun op -> apply op a b) (RSub :: RDiv :: ops)
+      List.map (fun op -> apply op a b) ops
       |> FloatSet.of_list |> FloatSet.to_list
   | [ a ] -> [ a ]
   | _ -> failwith "List not of two elements"
@@ -67,16 +67,17 @@ let split k u l =
     []
     [ four_way; fourth; third; second; first ]
 
+let ( =. ) a b = Float.abs (a -. b) <= 0.0001
+let other_input op v x = apply (inverse op) v x
+
 (* Requires len(nums) <= 4 *)
 let rec solve nums v : string list =
   if List.length nums > 4 then failwith "List length greater than 4";
   let inner op =
-    let ( = ) a b = Float.abs (a -. b) <= 0.0001 in
-    let round n = Float.round (n *. 1000.) /. 1000. in
-    let other_input x = apply (inverse op) v x |> round in
+    let other_input = other_input op v in
 
     let combine_known l1 r =
-      list_format (solve l1 @@ other_input r) (solve [ r ] r) op
+      list_format (solve l1 @@ other_input r) [ Float.to_string r ] op
     in
     let combine_unknown l1 l2 =
       List.fold_left
@@ -88,7 +89,7 @@ let rec solve nums v : string list =
 
     match nums with
     | [] -> []
-    | [ x ] when x = v -> [ Float.to_string x ]
+    | [ x ] when x =. v -> [ Float.to_string x ]
     | l -> split combine_known combine_unknown l
   in
   let module StringSet = Set.Make (String) in
