@@ -19,7 +19,7 @@
  (name num_op_combs)
  (synopsis "A short synopsis")
  (description "A longer description")
- (depends ocaml)
+ (depends ocaml alcotest)
  (tags
   ("add topics" "to describe" your project)))
 
