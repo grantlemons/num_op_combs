@@ -1,2 +1,2 @@
 (library
- (name num_op_combs))
+ (name solver))
