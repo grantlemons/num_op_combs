@@ -90,6 +90,7 @@ let rec solve nums v : string list =
     match nums with
     | [] -> []
     | [ x ] when x =. v -> [ Float.to_string x ]
+    | [ _ ] -> []
     | l -> split combine_known combine_unknown l
   in
   let module StringSet = Set.Make (String) in
