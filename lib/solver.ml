@@ -63,7 +63,7 @@ let split k u l =
   let first = function a :: tl -> k tl a | _ -> [] in
 
   List.fold_left
-    (fun acc x -> List.append acc (x l))
+    (fun acc x -> acc @ x l)
     []
     [ four_way; fourth; third; second; first ]
 
@@ -79,8 +79,7 @@ let rec solve nums v : string list =
     let combine_unknown l1 l2 =
       List.fold_left
         (fun acc r ->
-          List.append acc
-          @@ list_format (solve l1 @@ other_input r) (solve l2 r) op)
+          acc @ list_format (solve l1 @@ other_input r) (solve l2 r) op)
         [] (possible_outputs l2)
     in
 
